@@ -1,4 +1,7 @@
 # pip install numpy
+# pip install pandas
+# pip install openpyxl
+# pip install matplotlib
 
 import numpy as np
 
@@ -101,19 +104,62 @@ print(f"Variance of Returns: {variance_return:.4f}")
 print(f"Correlation Matrix:\n{correlation_matrix}")
 
 import pandas as pd
+print(pd.__version__)  # prints the pandas version
+
 import numpy as np
 
-# Generate 1,000 samples from a normal distribution
-heights = np.random.normal(loc=170, scale=10, size=1000)
-weights = np.random.normal(loc=70, scale=15, size=1000)
+# Generate 1,000 sample trades from a normal distribution
+price_open = np.random.normal(loc=170, scale=10, size=1000)
+price_close = np.random.normal(loc=175, scale=15, size=1000)
 
-# Create a correlation between height and weight
-weights += (heights - 170) * 0.5
-df = pd.DataFrame({'Height': heights, 'Weight': weights})
+# create a dataframe
+df = pd.DataFrame({'Opening Price': price_open, 'Closing Price': price_close})
 
 # Add categorical data
-genders = np.random.choice(['Male', 'Female'], size=1000)
-df['Gender'] = genders
+action = np.random.choice(['Buy', 'Sell'], size=1000)
+df['Trade Action'] = action
 df.head()
 df.describe()
-#This could be assets, opening price, bought or sold
+
+
+# A pandas DataFrame (here we are using df) is saved as a CSV file using the .to_csv() method. 
+# The arguments include the filename with path and index – where index = True implies writing 
+# the DataFrame’s index.
+df.to_csv("synthetic_asset_prices.csv", index=False)
+
+# read csv file
+df = pd.read_csv("synthetic_asset_prices.csv")
+df.head()
+df.describe()
+
+# MS Excel
+# df.to_excel("synthetic_asset_prices.xlsx")
+# df = pd.read_excel('synthetic_asset_prices.xlsx')
+
+# Extracting the second sheet since Python uses 0-indexing
+# df = pd.read_excel('synthetic_asset_prices.xlsx', sheet_name=1)
+
+
+# read data from an API
+# df = pd.read_json("https://api.example.com/data.json")
+
+
+
+import sqlite3
+
+# Establish a connection to an SQLite database
+conn = sqlite3.connect("fintechdb.db")
+
+# Read data from a table
+df2 = pd.read_sql("SELECT * FROM fse", conn)
+df2.head()
+df2.describe()
+
+
+import matplotlib.pyplot as plt
+
+x = [0, 1, 2, 3, 4]
+y = [0, 1, 4, 9, 16]
+
+plt.plot(x, y)
+plt.show()
