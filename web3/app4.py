@@ -44,6 +44,8 @@ def index():
     return render_template('index.html', contacts=contacts)
 
 # RESTful API start #
+
+# get all contacts
 @app.route('/contacts', methods=['GET'])
 def get_contacts():
     with sqlite3.connect(DATABASE) as conn:
@@ -52,6 +54,7 @@ def get_contacts():
         contacts = cursor.fetchall()
     return jsonify([{ "id": c[0], "name": c[1], "email": c[2], "phone": c[3] } for c in contacts])
 
+# create a new contact
 @app.route('/contacts', methods=['POST'])
 def add_contact():
     data = request.get_json()
@@ -67,6 +70,7 @@ def add_contact():
     
     return jsonify({"id": contact_id, "name": name, "email": email, "phone": phone}), 201
 
+# get contact by ID
 @app.route('/contacts/<int:contact_id>', methods=['GET'])
 def get_contact(contact_id):
     with sqlite3.connect(DATABASE) as conn:
@@ -78,6 +82,7 @@ def get_contact(contact_id):
         return jsonify({"id": contact[0], "name": contact[1], "email": contact[2], "phone": contact[3]})
     return jsonify({"message": "Contact not found"}), 404
 
+# delete contact by ID
 @app.route('/contacts/<int:contact_id>', methods=['DELETE'])
 def delete_contact(contact_id):
     with sqlite3.connect(DATABASE) as conn:
